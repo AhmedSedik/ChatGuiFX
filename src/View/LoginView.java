@@ -46,6 +46,7 @@ public class LoginView extends BaseView{
     }
 
     public void createView() {
+
         anchorPane = new AnchorPane();
         vbox = new VBox(10);
 
