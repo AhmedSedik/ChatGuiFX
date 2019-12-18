@@ -1,12 +1,15 @@
 package application.client;
 
+import View.BaseView;
 import View.LoginView;
+import application.ClientDriver;
 import application.server.Server;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.OutputStream;
 import java.net.SocketException;
 import java.util.logging.Logger;
 
@@ -18,7 +21,7 @@ public class ClientThread implements Runnable {
     private BufferedWriter outStream;
     private BufferedReader inStream;
 
-
+private ClientDriver mainApp = BaseView.getMainApp();
 
     final private Logger LOG = Logger.getLogger(Client.class.getName());
 
@@ -38,7 +41,14 @@ public class ClientThread implements Runnable {
     @Override
     public void run() {
         try {
+
+
             while (true) {
+               /* String username = mainApp.getUser().getUsername();
+                String pass = mainApp.getUser().getPassword();
+                outStream.write(username);
+                outStream.write(pass);*/
+
                 String message = inStream.readLine();
                 client.getMainApp().appendToChat(message + "\n");
             }
@@ -74,6 +84,10 @@ public class ClientThread implements Runnable {
      * @return a reference to the BufferedWriter associated with this thread
      */
     public BufferedWriter getWriter() {
+        return this.outStream;
+    }
+
+    public BufferedWriter getUserData() {
         return this.outStream;
     }
 }

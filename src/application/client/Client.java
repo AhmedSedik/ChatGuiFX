@@ -1,7 +1,11 @@
 package application.client;
 
 import application.ClientDriver;
+import application.model.User;
 import application.server.Server;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.*;
 import java.net.Socket;
@@ -18,6 +22,7 @@ public class Client {
     ClientDriver mainApp;
     private Socket clientSocket;
     private ClientThread clientThread;
+    private static File users;
 
     public Client(ClientDriver mainApp) {
         this.mainApp = mainApp;
@@ -34,6 +39,24 @@ public class Client {
         outStream.flush(); // Flush directly after creating
         BufferedReader inStream = new BufferedReader(new InputStreamReader(
                 clientSocket.getInputStream(), "UTF-8"));
+
+        // Create a new thread
+        clientThread = new ClientThread(this, outStream, inStream);
+
+        Thread thread = new Thread(clientThread);
+        thread.start();
+    }
+
+    public void registerUser() throws IOException {
+        clientSocket = new Socket("127.0.0.1", 4242);
+
+        // Get streams
+        BufferedWriter outStream = new BufferedWriter(new OutputStreamWriter(
+                clientSocket.getOutputStream(), "UTF-8"));
+        outStream.flush(); // Flush directly after creating
+        BufferedReader inStream = new BufferedReader(new InputStreamReader(
+                clientSocket.getInputStream(), "UTF-8"));
+
 
         // Create a new thread
         clientThread = new ClientThread(this, outStream, inStream);
@@ -65,6 +88,31 @@ public class Client {
         return mainApp;
     }
 
+    public void sendUserInfo(String username, String password) throws IOException {
+        clientSocket = new Socket("127.0.0.1", 4242);
+
+        // Get streams
+        BufferedWriter outStream = new BufferedWriter(new OutputStreamWriter(
+                clientSocket.getOutputStream(), "UTF-8"));
+        outStream.flush(); // Flush directly after creating
+        BufferedReader inStream = new BufferedReader(new InputStreamReader(
+                clientSocket.getInputStream(), "UTF-8"));
+
+
+        // Create a new thread
+        clientThread = new ClientThread(this, outStream, inStream);
+
+
+        clientThread.getUserData().write(String.valueOf(username));
+        clientThread.getUserData().write(String.valueOf(password));
+        clientThread.getUserData().flush();
+
+
+        Thread thread = new Thread(clientThread);
+        thread.start();
+
+        System.out.println(username + password);
+    }
 
 
     /**

@@ -3,8 +3,10 @@ package application;
 import View.BaseView;
 import View.ChatView;
 import View.LoginView;
+import View.RegisterView;
 import application.client.Client;
 import application.model.User;
+import application.server.Server;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -20,9 +22,11 @@ public class ClientDriver extends Application {
     private BorderPane rootLayout;
     private User user;
      private Client client;
+     private Server server;
 
      private LoginView loginView;
      private ChatView chatView;
+    private RegisterView registerView;
 
     public static void main(String[] args) {
         launch(args);
@@ -39,11 +43,12 @@ public class ClientDriver extends Application {
 
 
         client = new Client(this);
+        server = new Server();
         BaseView.setMainApp(this);// Set a reference back to main
 
         loginView = new LoginView();
         chatView = new ChatView();
-
+        registerView = new RegisterView();
         this.initRoot();
 
     }
@@ -71,7 +76,7 @@ public class ClientDriver extends Application {
      */
     public void appendToChat(String message) {
         //TODO
-        //chatView.appendTextToConversation(message);
+        chatView.appendTextToConversation(message);
     }
 
 
@@ -114,4 +119,15 @@ public class ClientDriver extends Application {
         return client;
     }
 
+    public BaseView getRegisterView() {
+        return registerView;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public void StartRegister() throws IOException {
+        getClient().sendUserInfo(getUser().getUsername(), getUser().getPassword());
+    }
 }

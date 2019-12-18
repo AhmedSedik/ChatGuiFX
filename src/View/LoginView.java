@@ -30,6 +30,7 @@ public class LoginView extends BaseView{
     private TextField ipInput;
     private TextField portInput;
     private Button connectBtn;
+    private Button registerBtn;
 
     private ClientDriver mainApp = BaseView.getMainApp();
 
@@ -83,17 +84,25 @@ public class LoginView extends BaseView{
         connectBtn = new Button("Connect");
         connectBtn.setPrefWidth(160.0);
         connectBtn.setOnAction(onBtnEvent);
-
         vbox.getChildren().add(connectBtn);
 
-        AnchorPane.setTopAnchor(vbox, 45.0);
-        AnchorPane.setLeftAnchor(vbox, 130.0);
-        AnchorPane.setRightAnchor(vbox, 130.0);
+         label = new Label("Dont Have an Account? ");
+        vbox.getChildren().add(label);
+
+        registerBtn = new Button("Register");
+        registerBtn.setPrefWidth(160.0);
+        registerBtn.setOnAction(onBtnEvent);
+        vbox.getChildren().add(registerBtn);
+
+
+        AnchorPane.setTopAnchor(vbox, 25.0);
+        AnchorPane.setLeftAnchor(vbox, 115.0);
+        AnchorPane.setRightAnchor(vbox, 100.0);
 
         anchorPane.getChildren().add(vbox);
     }
 
-    private javafx.event.EventHandler<javafx.event.ActionEvent> onBtnEvent = new EventHandler<ActionEvent>() {
+    private javafx.event.EventHandler<javafx.event.ActionEvent> onBtnEvent = new EventHandler<>() {
 
         @Override
         public void handle(ActionEvent actionEvent) {
@@ -122,6 +131,9 @@ public class LoginView extends BaseView{
                 //go to chat view if login or register successful
 
                 mainApp.setView(mainApp.getChatView());
+            } else if (actionEvent.getSource() == registerBtn) {
+                //TODO go to register screen
+                mainApp.setView(mainApp.getRegisterView());
             }
         }
     };

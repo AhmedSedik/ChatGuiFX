@@ -32,6 +32,7 @@ public class Server {
     public static void main(String[] args) {
 
         Server chatServer = new Server();
+
         chatServer.start();
     }
 
@@ -61,6 +62,7 @@ public class Server {
                 BufferedReader inStream = new BufferedReader(new InputStreamReader(
                         clientSocket.getInputStream(), "UTF-8"));
                 LOG.info("Streams to client established.");
+
 
                 // Create a new thread and store it
                 ServerThread serverThread = new ServerThread(this, outStream, inStream);

@@ -1,7 +1,10 @@
 package application.server;
 
+import View.BaseView;
+import application.ClientDriver;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.*;
 import java.net.SocketException;
@@ -14,6 +17,9 @@ public class ServerThread implements Runnable{
     private BufferedWriter outStream;
     private BufferedReader inStream;
     private Server chatServer;
+    private  File users;
+
+    //private ClientDriver mainApp = BaseView.getMainApp();
 
     final private Logger LOG = Logger.getLogger(ServerThread.class.getName());
 
@@ -47,6 +53,9 @@ public class ServerThread implements Runnable{
         try {
             //TODO login logic
 
+            registerUser();
+
+
             // Stay in this infinite loop and relay messages from this
             // client to other clients
             while (true)
@@ -67,7 +76,52 @@ public class ServerThread implements Runnable{
     }
 
 
+    public void registerUser() {
+        users = new File("users.csv");
+        try {
+            CSVWriter writer = new CSVWriter(new FileWriter(users.getAbsoluteFile(), true));
 
+            boolean userExists = false;
+            String readUsername;
+            String readPassword;
+
+            while (!userExists) {
+
+                while (((readUsername = inStream.readLine()) != null) &&
+                        ((readPassword = inStream.readLine()) != null)) {
+
+                    String[] nextRecord;
+                    userExists = false;
+                    CSVReader reader = new CSVReader(new FileReader(users));
+                    while ((((nextRecord = reader.readNext())) != null) && userExists == false) {
+                        if (nextRecord[0].equals(readUsername)) {
+                            System.out.println("a client entered an already taken username");
+                            //out.println("false");
+                            //out.println("Username Already Taken. \n Please enter Username and Password");
+                            userExists = true;
+                        }
+                    }
+                    if (userExists == false) {
+
+                        String[] data = {readUsername,readPassword};
+                        //System.out.println(socket + "Registered New User");
+                        System.out.println( "Registered New User");
+                        //out.println("true");
+                        //out.println("-----REGISTRATION SUCCESSFUL----");
+                        //username = readUsername;
+                        writer.writeNext(data);
+                        userExists = true;
+                        break;
+                    }
+                }
+            }
+        } catch (IOException e) {
+
+        } catch (
+                CsvValidationException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * Returns a reference to the BufferedWriter that belongs to this client.
      *

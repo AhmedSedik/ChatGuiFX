@@ -19,6 +19,7 @@ public class User {
         this.password = password;
         this.host = host;
         this.port = port;
+
     }
     //Empty Contructor
     public User() {
